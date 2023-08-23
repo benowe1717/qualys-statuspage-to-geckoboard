@@ -5,11 +5,13 @@
         private $file = __DIR__ . "/.creds.ini";
         private $apikey = "";
         private $pageid = "";
+        private $proxy = "";
 
         public $scheme = "https://";
         public $domain = "";
         public $version = "";
         public $url = "";
+        public $proxy_status = FALSE;
 
         public $ignored_statuses = array("under_maintenance", "operational");
         public $platforms = array();
@@ -29,6 +31,16 @@
                 $this->pageid = $arr["api"]["pageid"];
             } else {
                 echo "ERROR: Unable to get API credentials!\n";
+                exit(1);
+            }
+
+            if(isset($arr["proxy"])) {
+                if($arr["proxy"]["status"] === 1) {
+                    $this->proxy_status = TRUE;
+                    $this->proxy = $arr["proxy"]["address"];
+                }
+            } else {
+                echo "ERROR: Unable to determine proxy status!\n";
                 exit(1);
             }
 
@@ -55,6 +67,9 @@
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            if($this->proxy_status) {
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+            }
             $response = curl_exec($ch);
             $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
