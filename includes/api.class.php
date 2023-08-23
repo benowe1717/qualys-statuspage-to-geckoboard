@@ -35,7 +35,7 @@
             }
 
             if(isset($arr["proxy"])) {
-                if($arr["proxy"]["status"] === 1) {
+                if($arr["proxy"]["status"] == 1) {
                     $this->proxy_status = TRUE;
                     $this->proxy = $arr["proxy"]["address"];
                 }
