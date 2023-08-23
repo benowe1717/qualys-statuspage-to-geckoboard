@@ -28,7 +28,7 @@
                 $this->version = $arr["gecko"]["version"];
                 $this->widget_key = $arr["gecko"]["widgetkey"];
             } else {
-                echo "ERROR: Unable to get Geckoboard credentials!";
+                echo "ERROR: Unable to get Geckoboard credentials!\n";
                 exit(1);
             }
 

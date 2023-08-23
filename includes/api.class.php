@@ -16,7 +16,7 @@
 
         function __construct() {
             if(!is_file($this->file)) {
-                echo "ERROR: Unable to read credentials file!";
+                echo "ERROR: Unable to read credentials file!\n";
                 exit(1);
             } else {
                 $arr = parse_ini_file($this->file, TRUE);
@@ -28,7 +28,7 @@
                 $this->version = $arr["api"]["version"];
                 $this->pageid = $arr["api"]["pageid"];
             } else {
-                echo "ERROR: Unable to get API credentials!";
+                echo "ERROR: Unable to get API credentials!\n";
                 exit(1);
             }
 
