@@ -6,9 +6,16 @@
     $api = new myApi();
     $gecko = new myGeckoboard();
 
-    $api->unresolvedIncidents();
-    
-    $msg = "This is a test message, but from PHP this time";
+    $incidents = $api->unresolvedIncidents();
+    if(count($incidents) > 0) {
+        $msg = "";
+        foreach($incidents as $incident) {
+            $msg .= "<span style='background-color: red;'>{$incident['platform_name']} - {$incident['product_name']} is <strong>DOWN!</strong></span>\n\n";
+        }
+    } else {
+        $msg = "<center style='background-color: green;'><strong>OK</strong></center>";
+    }
+
     $result = $gecko->pushToGeckoboard($msg);
     
     if($result["status"] === 200) {
