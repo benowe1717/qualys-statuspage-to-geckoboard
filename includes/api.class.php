@@ -11,6 +11,9 @@
         public $version = "";
         public $url = "";
 
+        public $ignored_statuses = array("under_maintenance", "operational");
+        public $platforms = array();
+
         function __construct() {
             if(!is_file($this->file)) {
                 echo "ERROR: Unable to read credentials file!";
@@ -30,6 +33,11 @@
             }
 
             $this->url = "{$this->scheme}{$this->domain}/{$this->version}";
+            $result = $this->getPlatforms();
+            if($result === FALSE) {
+                echo "ERROR: Unable to enumerate Platforms!\n";
+                exit(1);
+            }
         }
 
         private function callApi(string $endpoint, int $page = 0) {
@@ -67,20 +75,60 @@
             }
         }
 
+        private function getPlatforms() {
+            /*
+             * Call the Component Groups API endpoint, which for us is our
+             * Platform Names. Grab the ID and Name and store the in the 
+             * public array so we can reference them later if needed
+             * https://developer.statuspage.io/#operation/getPagesPageIdComponentGroups
+            */
+            $i = 1;
+            $endpoint = "component-groups";
+            $response = $this->callApi($endpoint, $i);
+            if($response !== FALSE && $response["status"] === 200) {
+                $platforms = $response["msg"];
+                foreach($platforms as $platform) {
+                    $id = $platform["id"];
+                    $name = $platform["name"];
+                    $this->platforms[$id] = $name;
+                }
+            } else {
+                return FALSE;
+            }
+        }
+
         public function unresolvedIncidents() {
+            /*
+             * Call the Unresolved Incidents API endpoint, which should only
+             * list OPEN incidents of any kind. Specifically though, we are 
+             * checking if this is an OUTAGE, not for maintenance. If an 
+             * OUTAGE is found, add it to the array for returning later, else
+             * do nothing.
+             * https://developer.statuspage.io/#operation/getPagesPageIdIncidentsUnresolved
+            */
             $arr = array();
             $i = 1;
             $endpoint = "incidents/unresolved";
             $response = $this->callApi($endpoint, $i);
             while($response !== FALSE && $response["status"] === 200) {
                 if(count($response["msg"]) > 0) {
-                    print_r($response["msg"]);
+                    foreach($response["msg"] as $incidents) {
+                        foreach($incidents["components"] as $component) {
+                            if(!in_array($component["status"], $this->ignored_statuses)) {
+                                $id = $component["id"];
+                                $product_name = $component["name"];
+                                $platform_name = $this->platforms[$component["group_id"]];
+                                $arr[$id] = array("platform_name" => $platform_name, "product_name" => $product_name);
+                            }
+                        }
+                    }
                     $i++;
                     $response = $this->callApi($endpoint, $i);
                 } else {
                     break;
                 }
             }
+            return $arr;
         }
 
     }

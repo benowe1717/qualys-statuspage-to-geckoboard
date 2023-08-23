@@ -36,6 +36,14 @@
         }
 
         public function pushToGeckoboard(string $text) {
+            /*
+             * Call the custom Widget Key API endpoint and post the corresponding
+             * text to the widget. All formatting and control of the text can be
+             * found in the main.php script.
+             * https://developer-custom.geckoboard.com/#details
+             * https://developer-custom.geckoboard.com/#text
+             * https://support.geckoboard.com/en/articles/6055637-use-the-text-widget-to-display-text-on-your-dashboard#adding_html
+            */
             $url = "{$this->url}/send/{$this->widget_key}";
             $payload["api_key"] = $this->apikey;
             $payload["data"]["item"][0]["text"] = $text;
