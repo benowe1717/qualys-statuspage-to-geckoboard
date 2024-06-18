@@ -1,6 +1,6 @@
 # Qualys Status Page Posts to Geckoboard
 
-Qualys Status Page Posts to Geckboard is a `tool` that allows `managers` to `update custom Geckoboard Dashboard` with Posts made to the `Qualys Status Page`.
+Qualys Status Page Posts to Geckboard is a `tool` that scrapes posts made to a public `StatusPage.io` website and pushes those to a custom `Geckboard` widget.
 
 This makes it easy to include current outages or planned maintenance windows on the TVs mounted in the office that show other key performance indicators and important messages.
 
@@ -28,6 +28,10 @@ Create a file in the same directory as `main.py` called `.creds.yaml`
 Fill in the yaml file as:
 ```
 credentials:
+  statuspage:
+    apikey:
+    host:
+    pageid:
 ```
 
 ## Configuration
