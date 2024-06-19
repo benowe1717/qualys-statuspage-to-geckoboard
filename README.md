@@ -20,18 +20,23 @@ Before you begin, ensure you have met the following requirements:
 
 To install `Qualys Status Page Posts to Geckoboard`, follow these steps:
 
-- Install all required libraries using the `requirements.txt` file and `pip3`:
+* Install all required libraries using the `requirements.txt` file and `pip3`:
 `pip3 install -r requirements.txt`
 
-- Create the credentials yaml file that is necessary:
-Create a file in the same directory as `main.py` called `.creds.yaml`
-Fill in the yaml file as:
+* Supply the necessary credentials in ONE of TWO ways:
+   1. Fill in the supplied credentials.yaml template located at `./src/configs/credentials.yaml`
+   2. Create a credentials.yaml file anywhere you'd like
+      * Fill in the yaml file as:
 ```
 credentials:
   statuspage:
     apikey:
     host:
     pageid:
+  geckoboard:
+    apikey:
+    host:
+    widgetkey:
 ```
 
 ## Configuration
