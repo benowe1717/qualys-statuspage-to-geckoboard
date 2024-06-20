@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import json
+import logging
+import logging.config
 
 import requests
 
@@ -18,6 +20,7 @@ class GeckboardApi:
             'Accept': 'application/json'
         }
         self._auth()
+        self.logger = logging.getLogger(constants.PROGRAM_NAME)
 
     @property
     def credentials_file(self) -> str:
@@ -101,7 +104,9 @@ class GeckboardApi:
             headers=self.headers,
             data=json.dumps(payload))
         if r.status_code != 200:
+            self.logger.info('ERROR: Unable to push message to Geckoboard!')
             error = (payload, r.status_code, r.json())
-            print(error)
+            self.logger.info(f'Error Details: {error}')
             return False
+        self.logger.info('Successfully pushed message to Geckoboard!')
         return True

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import logging
+import logging.config
+
 import requests
 
 from src.classes.file_checker import FileChecker
@@ -19,6 +22,7 @@ class StatusPageApi:
         self._auth()
         self.platforms = []
         self.incidents = []
+        self.logger = logging.getLogger(constants.PROGRAM_NAME)
 
     @property
     def credentials_file(self) -> str:
@@ -73,14 +77,16 @@ class StatusPageApi:
         url = self.SCHEME + self.headers['Host'] + endpoint
         r = requests.get(url=url, headers=self.headers)
         if r.status_code != 200:
+            self.logger.info('ERROR: Unable to retrieve Platforms!')
             error = (url, r.status_code, r.json())
-            print(error)
+            self.logger.info(f'Error Details: {error}')
             return False
         platforms = r.json()
         for platform in platforms:
             id = platform['id']
             name = platform['name']
             self.platforms.append((id, name))
+        self.logger.info('Platforms retrieved successfully!')
         return True
 
     def get_unresolved_incidents(self) -> bool:
@@ -88,8 +94,10 @@ class StatusPageApi:
         url = self.SCHEME + self.headers['Host'] + endpoint
         r = requests.get(url=url, headers=self.headers)
         if r.status_code != 200:
+            self.logger.info('ERROR: Unable to retrieve unresolved incidents!')
             error = (url, r.status_code, r.json())
-            print(error)
+            self.logger.info(f'Error Details: {error}')
             return False
         self.incidents = r.json()
+        self.logger.info('Unresolved Incidents retrieved successfully!')
         return True
