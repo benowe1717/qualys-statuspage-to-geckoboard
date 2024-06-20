@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import json
+
 import requests
 
 from src.classes.file_checker import FileChecker
@@ -94,7 +96,10 @@ class GeckboardApi:
                 }]
             }
         }
-        r = requests.post(url=url, headers=self.headers, data=payload)
+        r = requests.post(
+            url=url,
+            headers=self.headers,
+            data=json.dumps(payload))
         if r.status_code != 200:
             error = (payload, r.status_code, r.json())
             print(error)
