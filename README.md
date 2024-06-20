@@ -39,9 +39,15 @@ credentials:
     widgetkey:
 ```
 
-## Configuration
-
 ## Using
+
+The credentials file controls which StatusPage.io account you are scraping and which Geckoboard Widget you are pushing to. So all you need to do to run this is:
+
+`python3 main.py`
+
+If you are adding this script to Cron or a Cronjob, you can do something like:
+
+`* * * * 1,2,3,4,5 username cd /path/to/script && python3 main.py >> cron.log 2>&1`
 
 ## Contributing to Qualys Status Page Posts to Geckoboard
 
@@ -59,7 +65,7 @@ Alternatively see the GitHub documentation on [creating a pull request](https://
 
 Thanks to the following people who have contributed to this project:
 
-- [@benowe1717](https://github.com/benowe1717)
+- [Benjamin Owen](https://github.com/benowe1717)
 
 ## Contact
 
