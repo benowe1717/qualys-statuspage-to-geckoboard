@@ -11,7 +11,52 @@ def main():
     if not result:
         exit(1)
 
-    print(statuspage.incidents)
+    if len(statuspage.incidents) > 0:
+        messages = []
+        status = 'DOWN'
+        result = statuspage.get_component_groups()
+        if not result:
+            exit(1)
+
+        for incident in statuspage.incidents:
+            impact = incident['impact']
+            if impact == 'maintenance':
+                continue
+
+            product_name = ''
+            platform_name = ''
+            for component in incident['components']:
+                product_name = component['name']
+                platform_id = component['group_id']
+                platform_name = ''
+                for platform in statuspage.platforms:
+                    if platform_id == platform[0]:
+                        platform_name = platform[1]
+
+            msg = geckboard.build_msg(
+                status,
+                platform_name=platform_name,
+                product_name=product_name)
+            if not msg:
+                continue
+
+            messages.append(msg)
+
+        if len(messages) > 0:
+            msg = ''.join(messages)
+            result = geckboard.push_to_widget(msg)
+            if not result:
+                exit(1)
+
+    else:
+        status = 'OK'
+        msg = geckboard.build_msg(status)
+        if not msg:
+            exit(1)
+
+        result = geckboard.push_to_widget(msg)  # type: ignore
+        if not result:
+            exit(1)
 
 
 if __name__ == '__main__':

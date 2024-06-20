@@ -2,7 +2,7 @@
 
 Qualys Status Page Posts to Geckboard is a `tool` that scrapes posts made to a public `StatusPage.io` website and pushes those to a custom `Geckboard` widget.
 
-This makes it easy to include current outages or planned maintenance windows on the TVs mounted in the office that show other key performance indicators and important messages.
+This makes it easy to include current outages on the TVs mounted in the office that show other key performance indicators and important messages.
 
 ## Prerequisites
 
